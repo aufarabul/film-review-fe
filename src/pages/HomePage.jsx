@@ -1,26 +1,16 @@
-// Initialization connect to backend websocket (socket.io)
+import Carousel from "../components/carousel/Carousel";
+import { Row, Col, Container } from "react-bootstrap";
 
-function Home() {
+function home() {
   return (
     <>
-      <Row className="mt-4">
-        <Col>
-          <h6>{typing && "seseorang sedang mengetik...."}</h6>
-        </Col>
-      </Row>
-
-      <Row className="mt-4">
-        <Col>
-          {messages?.length > 0 &&
-            messages?.map((message) => (
-              <MessageItem data={message} key={message.id} />
-            ))}
-        </Col>
-
-        <AddMessage socket={socket} />
+      <Row>
+        <Container>
+          <Carousel />
+        </Container>
       </Row>
     </>
   );
 }
 
-export default Home;
+export default home;
