@@ -1,0 +1,29 @@
+/* Webkit browsers (Chrome, Safari) */
+.cardReview {
+  overflow-y: auto;
+  max-height: 400px;
+}
+
+.cardReview::-webkit-scrollbar {
+  width: 10px; /* Width of the scrollbar */
+}
+
+.cardReview::-webkit-scrollbar-track {
+  background: #d40000; /* Color of the scrollbar track */
+  border-radius: 20px; /* Rounded corners for the track */
+}
+
+.cardReview::-webkit-scrollbar-thumb {
+  background: #3c3535; /* Color of the scrollbar thumb */
+  border-radius: 10px; /* Rounded corners for the thumb */
+}
+
+.cardReview::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color of the scrollbar thumb when hovered */
+}
+
+/* Firefox */
+.cardReview {
+  scrollbar-width: unset film; /* Make the scrollbar thinner */
+  scrollbar-color: #a6bedd #6b6691; /* Thumb color and track color */
+}

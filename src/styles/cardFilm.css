@@ -1,0 +1,5 @@
+.car-film {
+  width: 250px; /* Adjust width as needed */
+  height: 250px; /* Adjust height as needed */
+  object-fit: cover; /* Maintain aspect ratio and crop if necessary */
+}

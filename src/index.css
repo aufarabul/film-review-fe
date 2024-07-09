@@ -68,8 +68,11 @@ button:focus-visible {
 } */
 
 body {
-  background-image: radial-gradient(circle at center, #071952, #088395);
+  background-image: radial-gradient(circle at center, #494949, #056676);
   font-family: "Poppins", sans-serif;
   font-weight: 400;
   font-style: normal;
+  overflow-x: hidden; /* Disable horizontal scrolling */
+  scrollbar-width: 200px; /* Make the scrollbar thinner */
+  scrollbar-color: #273f5e #ffffff; /* Thumb color and track color */
 }
