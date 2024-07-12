@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Container, Image, Row, Form, Button, Col } from "react-bootstrap";
 import Carousel from "react-bootstrap/Carousel";
 import { useSelector, useDispatch } from "react-redux";
-import { getFilms } from "../../redux/actions/film";
+import { getFilms, getCast } from "../../redux/actions/film";
 import FilmsCard from "../CardFilm/cardFilm";
 import * as image from "../../assets/image";
 import { Box, Skeleton } from "@mui/material";
@@ -11,9 +11,13 @@ function Home() {
   const dispatch = useDispatch();
   const [isLoading, setLoading] = useState(true); // Set initial state to true for loading
   const { film } = useSelector((state) => state?.film);
+  const [creditsList, setCreditsList] = useState([]);
+
+  const idTmdb = film?.id_tmdb;
 
   useEffect(() => {
-    dispatch(getFilms()).finally(() => setLoading(false)); // Update loading state after fetching data
+    dispatch(getFilms()).finally(() => setLoading(false));
+    getCast(setCreditsList, idTmdb); // Update loading state after fetching data
   }, [dispatch]);
 
   const loadingbar = (
@@ -29,7 +33,7 @@ function Home() {
       <Row>
         <div className="col-md-6 my-auto p-5">
           <h1 style={{ fontWeight: "bold", color: "#37B7C3" }}>
-            Halo selamat datang di LayarKata
+            Halo selamat datang di Bioskop Narasi
           </h1>
           <p style={{ color: "#EBF4F6" }}>
             Bergabunglah dengan komunitas pecinta film Indonesia, bagikan review
@@ -48,11 +52,13 @@ function Home() {
         <div className="col-md-6">
           <Container className="rounded-4 ">
             <Carousel
-              className="d-flex justify-content-center m-4 rounded-3"
+              rounded
+              className="d-flex justify-content-center  rounded-3 m-3"
               style={{ borderRadius: "20px" }}
             >
               <Carousel.Item style={{ height: "500px" }}>
                 <Image
+                  rounded
                   className="d-block w-100 rounded-3"
                   style={{ objectFit: "scale-down" }}
                   src={image.menantuSinting}

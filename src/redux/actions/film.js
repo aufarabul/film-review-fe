@@ -52,6 +52,17 @@ export const getFilm = (navigate, id, setIsLoading) => async (dispatch) => {
   setIsLoading(false);
 };
 
+export const getCast = (setCreditsList, idTmdb) => async (dispatch) => {
+  fetch(`https://api.themoviedb.org/3/movie/${idTmdb}/credits?language=en-US`, {
+    headers: {
+      accept: "application/json",
+      Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0Zjk1OTIwNTJlOTIwOTBhM2Q5NmI0MzFmY2QzZjU4NCIsIm5iZiI6MTcyMDcyMTkwNC4yNDAwMDEsInN1YiI6IjY2OTAxYjdlY2FmMjM2YmE2NDIzODUxNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.CwxacrGvB9aeUoGFiA0Z77wnqcagWw94VFKsfxmmdOQ`, // Replace with your actual API key
+    },
+  })
+    .then((res) => res.json())
+    .then((json) => setCreditsList(json.cast)) // Make sure to use "cast" instead of "results"
+    .catch((err) => console.error("Error fetching credits:", err));
+};
 // export const AddFilm =
 //   (navigate, plate, manufacture, model, year, image, setIsLoading) =>
 //   async (dispatch, getState) => {

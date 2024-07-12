@@ -9,7 +9,6 @@ function home() {
         <Container>
           <Carousel />
         </Container>
-        <div className="container mt-5"></div>
       </Row>
     </>
   );

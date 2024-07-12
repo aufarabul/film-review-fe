@@ -28,9 +28,10 @@ function InputReview({ id }) {
   return (
     <>
       <Form
-        style={{ backgroundColor: "white" }}
+        style={{ color: "white" }}
         onSubmit={onSubmit}
-        className="shadow p-3 mb-5 bg-body-primary rounded"
+        className="shadow p-3 mb-5 bg-dark rounded"
+        data-bs-theme="dark"
       >
         <Form.Group className="mb-3" controlId="name">
           <Form.Label>Name *</Form.Label>
@@ -45,7 +46,9 @@ function InputReview({ id }) {
         <Form.Group className="mb-3" controlId="name">
           <Form.Label>Rating *</Form.Label>
           <Rating
+            style={{ backgroundColor: "white", borderRadius: 240 }}
             name="simple-controlled"
+            className="m-4"
             value={value}
             onChange={(event, newValue) => {
               setValue(newValue);

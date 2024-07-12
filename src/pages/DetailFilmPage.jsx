@@ -1,13 +1,23 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { Row, Col, Container, Button, Image, Card } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  Container,
+  Button,
+  Image,
+  Card,
+  Carousel,
+} from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import { getFilm } from "../redux/actions/film";
+import { getFilm, getCast } from "../redux/actions/film";
+import { fetchMovieCredits } from "../redux/actions/cast";
 import { Box, Skeleton, Rating, Typography } from "@mui/material";
 import CardReview from "../components/CardReview/CardReview";
 import InputReview from "../components/Input/InputReview";
 import "../styles/scroll.css";
+import CastCarousel from "../components/CastCard/castCard";
 const detail = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -17,6 +27,9 @@ const detail = () => {
   const { film } = useSelector((state) => state?.film);
   const [showVideo, setShowVideo] = useState(false);
   const ulasanState = useSelector((state) => state.ulasan);
+  const credits = useSelector((state) => state?.credits);
+  const error = useSelector((state) => state?.error);
+
   const toggleVideo = () => {
     setShowVideo(!showVideo);
   };
@@ -24,13 +37,27 @@ const detail = () => {
   const totalRating = ratings.reduce((acc, num) => acc + num, 0);
   const average =
     ratings.length > 0 ? (totalRating / ratings.length).toFixed(1) : "0.0";
-  console.log(parseFloat(average));
-
+  const idTmdb = film?.id_tmdb;
+  const [creditsList, setCreditsList] = useState([]);
+  //  const getCast = () => {
+  //    fetch(
+  //      `https://api.themoviedb.org/3/movie/${film?.id_tmdb}/credits?language=en-US`,
+  //      {
+  //        headers: {
+  //          accept: "application/json",
+  //          Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0Zjk1OTIwNTJlOTIwOTBhM2Q5NmI0MzFmY2QzZjU4NCIsIm5iZiI6MTcyMDcyMTkwNC4yNDAwMDEsInN1YiI6IjY2OTAxYjdlY2FmMjM2YmE2NDIzODUxNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.CwxacrGvB9aeUoGFiA0Z77wnqcagWw94VFKsfxmmdOQ`, // Replace with your actual API key
+  //        },
+  //      }
+  //    )
+  //      .then((res) => res.json())
+  //      .then((json) => setCreditsList(json.cast)) // Make sure to use "cast" instead of "results"
+  //      .catch((err) => console.error("Error fetching credits:", err));
+  //  };
   useEffect(() => {
+    dispatch(fetchMovieCredits);
     dispatch(getFilm(navigate, id, setIsLoading));
-  }, [dispatch, id, navigate, ulasanState]);
-
-  console.log(film);
+    dispatch(getCast(setCreditsList, idTmdb));
+  }, [dispatch, id, navigate, ulasanState, setCreditsList, idTmdb]);
 
   const loadingbar = (
     <Box sx={{ pt: 0.5 }}>
@@ -77,8 +104,11 @@ const detail = () => {
           md={6}
           className=" d-flex justify-content-center align-items-center"
         >
-          <Container className="p-0 my-0">
-            <h4 style={{ color: "white" }} className=" ">
+          <Container className="">
+            <h4
+              style={{ color: "white" }}
+              className="d-flex justify-content-center"
+            >
               {film?.nama_film}
             </h4>
             <p style={{ color: "white", fontWeight: "800" }}>Sutradara :</p>
@@ -100,7 +130,7 @@ const detail = () => {
               className="text-center m-5"
               style={{ backgroundColor: "#222831", color: "white" }}
             >
-              <Card.Header>LayarKata Rating</Card.Header>
+              <Card.Header>BioskopNarasi Rating</Card.Header>
               <Card.Body>
                 <h1>{parseFloat(average)}/5</h1>
 
@@ -127,10 +157,15 @@ const detail = () => {
           </div>
         </Col>
       </Row>
+      <Row>
+        <CastCarousel creditsList={creditsList} />
+      </Row>
       <Row className="cardReview">
         <CardReview film={film} />
       </Row>
-      <InputReview id={film?.id} />
+      <Container className="mt-5">
+        <InputReview id={film?.id} />
+      </Container>
     </>
   );
 };
