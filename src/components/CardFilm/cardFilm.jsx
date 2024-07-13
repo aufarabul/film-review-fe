@@ -5,22 +5,19 @@ import "../../styles/cardFilm.css";
 
 const filmsCard = ({ film }) => {
   return (
-    <Col
-      className="films-Card "
-      md={3}
-      sm={6}
-      as={Link}
-      to={`/film/${film?.id}`}
-    >
+    <Col className="films-Card " md={3} sm={6}>
       <Card
-        className="m-5 shadow p-3 mb-5  rounded"
+        className="film-card m-5 shadow p-3 mb-5  rounded"
         fluid
         style={{
           width: "18rem",
-          backgroundColor: "#088395",
+          backgroundColor: "#222831",
           color: "#EBF4F6",
           height: "450px",
+          textDecoration: "none",
         }}
+        as={Link}
+        to={`/film/${film?.id}`}
       >
         <Card.Img
           fluid
@@ -36,7 +33,7 @@ const filmsCard = ({ film }) => {
           </Card.Subtitle> */}
           <Card.Title>{film?.nama_film}</Card.Title>
           <Card.Text>{film?.genre?.nama_genre}</Card.Text>
-          <Button variant="primary">See Details</Button>
+          <Button variant="secondary">See Details</Button>
         </Card.Body>
       </Card>
     </Col>

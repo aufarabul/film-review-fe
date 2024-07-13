@@ -20,10 +20,10 @@ function NavScrollExample() {
             <Nav.Link href="/">Beranda</Nav.Link>
 
             <NavDropdown title="Genre" id="navbarScrollingDropdown">
-              <NavDropdown.Item href="#action3">Horror</NavDropdown.Item>
-              <NavDropdown.Item href="#action4">Drama </NavDropdown.Item>
+              <NavDropdown.Item href="/genre/1">Horror</NavDropdown.Item>
+              <NavDropdown.Item href="/genre/6">Drama </NavDropdown.Item>
 
-              <NavDropdown.Item href="#action5">Comedy </NavDropdown.Item>
+              <NavDropdown.Item href="/genre/2">Comedy </NavDropdown.Item>
             </NavDropdown>
             <Nav.Link href="#action2">Tentang Kami</Nav.Link>
           </Nav>

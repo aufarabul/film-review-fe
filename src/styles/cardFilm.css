@@ -3,3 +3,13 @@
   height: 250px; /* Adjust height as needed */
   object-fit: cover; /* Maintain aspect ratio and crop if necessary */
 }
+
+.film-card {
+  transition: transform 0.5s ease; /* Smooth transition for hover effect */
+}
+
+.film-card:hover {
+  transform: scale(1.1); /* Zoom in on hover */
+  z-index: 1; /* Ensure the hovered card stays on top */
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+}

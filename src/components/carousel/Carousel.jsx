@@ -11,13 +11,9 @@ function Home() {
   const dispatch = useDispatch();
   const [isLoading, setLoading] = useState(true); // Set initial state to true for loading
   const { film } = useSelector((state) => state?.film);
-  const [creditsList, setCreditsList] = useState([]);
-
-  const idTmdb = film?.id_tmdb;
 
   useEffect(() => {
     dispatch(getFilms()).finally(() => setLoading(false));
-    getCast(setCreditsList, idTmdb); // Update loading state after fetching data
   }, [dispatch]);
 
   const loadingbar = (

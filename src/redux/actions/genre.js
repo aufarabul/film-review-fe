@@ -1,15 +1,14 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-import { setFilms, setFilm } from "../reducers/film";
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { setGenres, setGenre } from "../reducers/genre";
 
-export const getFilms = () => async (dispatch, getState) => {
+export const getGenres = () => async (dispatch, getState) => {
   // const { token } = getState().auth;
 
   let config = {
     method: "get",
     maxBodyLength: Infinity,
-    url: `${import.meta.env.VITE_BACKEND_API}/api/film`,
+    url: `${import.meta.env.VITE_BACKEND_API}/api/genre`,
     headers: {},
   };
 
@@ -17,7 +16,7 @@ export const getFilms = () => async (dispatch, getState) => {
     const response = await axios.request(config);
     const { data } = response.data;
 
-    dispatch(setFilms(data));
+    dispatch(setGenres(data));
   } catch (error) {
     // if (
     //   error.response?.status === 401 &&
@@ -30,13 +29,13 @@ export const getFilms = () => async (dispatch, getState) => {
   }
 };
 
-export const getFilm = (navigate, id, setIsLoading) => async (dispatch) => {
+export const getGenre = (navigate, id, setIsLoading) => async (dispatch) => {
   setIsLoading(true);
 
   let config = {
     method: "get",
     maxBodyLength: Infinity,
-    url: `${import.meta.env.VITE_BACKEND_API}/api/film/${id}`,
+    url: `${import.meta.env.VITE_BACKEND_API}/api/genre/${id}`,
     headers: {},
   };
 
@@ -44,7 +43,7 @@ export const getFilm = (navigate, id, setIsLoading) => async (dispatch) => {
     const response = await axios.request(config);
     const { data } = response.data;
 
-    dispatch(setFilm(data));
+    dispatch(setGenre(data));
   } catch (error) {
     toast.error(error?.response?.data?.message);
 
@@ -65,82 +64,7 @@ export const getFilm = (navigate, id, setIsLoading) => async (dispatch) => {
 //     .catch((err) => console.error("Error fetching credits:", err));
 // };
 
-export const getCast =
-  (setCreditsList, idTmdb, retryCount = 3) =>
-  async (dispatch) => {
-    const fetchCredits = async (retryCount) => {
-      try {
-        const response = await fetch(
-          `https://api.themoviedb.org/3/movie/${idTmdb}/credits`,
-          {
-            headers: {
-              accept: "application/json",
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0Zjk1OTIwNTJlOTIwOTBhM2Q5NmI0MzFmY2QzZjU4NCIsIm5iZiI6MTcyMDcyMTkwNC4yNDAwMDEsInN1YiI6IjY2OTAxYjdlY2FmMjM2YmE2NDIzODUxNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.CwxacrGvB9aeUoGFiA0Z77wnqcagWw94VFKsfxmmdOQ`, // Replace with your actual API key
-            },
-          }
-        );
-
-        if (!response.ok) {
-          if (response.status === 404 && retryCount > 0) {
-            console.warn(`Retrying... ${retryCount} attempts left`);
-            return fetchCredits(retryCount - 1);
-          } else {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-        }
-
-        const data = await response.json();
-        setCreditsList(data.cast);
-      } catch (err) {
-        console.error("Error fetching credits:", err);
-      }
-    };
-
-    await fetchCredits(retryCount);
-  };
-
-const fetchWithRetry = async (url, options, retries = 3, delay = 1000) => {
-  for (let i = 0; i < retries; i++) {
-    try {
-      const response = await fetch(url, options);
-      if (!response.ok) {
-        if (response.status === 404) {
-          console.error("API returned 404, retrying...");
-          throw new Error("404 Not Found");
-        }
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response;
-    } catch (error) {
-      if (i < retries - 1) {
-        await new Promise((resolve) => setTimeout(resolve, delay));
-      } else {
-        throw error;
-      }
-    }
-  }
-};
-
-export const fetchMovieTrailer = createAsyncThunk(
-  "movies/fetchMovieTrailer",
-  async (idTmdb) => {
-    const response = await fetch(
-      `https://api.themoviedb.org/3/movie/${idTmdb}/videos`,
-      {
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0Zjk1OTIwNTJlOTIwOTBhM2Q5NmI0MzFmY2QzZjU4NCIsIm5iZiI6MTcyMDg2MzYzMy41NTY2NTksInN1YiI6IjY2OTAxYjdlY2FmMjM2YmE2NDIzODUxNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.KSZfnotW2SixjmktIWapso9VtDEWDSK_VZvCrdWwR2o`, // Ganti dengan API key Anda
-        },
-      }
-    );
-    const data = await response.json();
-    const trailer = data.results.find(
-      (video) => video.type === "Trailer" && video.site === "YouTube"
-    );
-    return trailer ? trailer.key : null;
-  }
-);
-// export const AddFilm =
+// export const Addgenre =
 //   (navigate, plate, manufacture, model, year, image, setIsLoading) =>
 //   async (dispatch, getState) => {
 //     setIsLoading(true);
@@ -157,7 +81,7 @@ export const fetchMovieTrailer = createAsyncThunk(
 
 //     let config = {
 //       method: "post",
-//       url: `${import.meta.env.VITE_BACKEND_API}api/Films`,
+//       url: `${import.meta.env.VITE_BACKEND_API}api/genres`,
 //       headers: {
 //         Authorization: `Bearer ${token}`,
 //       },
@@ -177,7 +101,7 @@ export const fetchMovieTrailer = createAsyncThunk(
 //     setIsLoading(false);
 //   };
 
-// export const UpdateFilm =
+// export const Updategenre =
 //   (navigate, plate, manufacture, model, year, image, setIsLoading, id) =>
 //   async (dispatch, getState) => {
 //     setIsLoading(true);
@@ -194,7 +118,7 @@ export const fetchMovieTrailer = createAsyncThunk(
 
 //     let config = {
 //       method: "put",
-//       url: `${import.meta.env.VITE_BACKEND_API}api/Films/${id}`,
+//       url: `${import.meta.env.VITE_BACKEND_API}api/genres/${id}`,
 //       headers: {
 //         Authorization: `Bearer ${token}`,
 //       },
@@ -205,7 +129,7 @@ export const fetchMovieTrailer = createAsyncThunk(
 //       const response = await axios.request(config);
 //       console.log(JSON.stringify(response.data));
 
-//       toast.success(`Film dengan id: ${id} berhasil diupdate`);
+//       toast.success(`genre dengan id: ${id} berhasil diupdate`);
 //       navigate("/");
 //     } catch (error) {
 //       toast.error(error?.response?.data?.message);
@@ -213,7 +137,7 @@ export const fetchMovieTrailer = createAsyncThunk(
 //     setIsLoading(false);
 //   };
 
-// export const DeleteFilm =
+// export const Deletegenre =
 //   (id, navigate, setIsLoading) => async (dispatch, getState) => {
 //     setIsLoading(true);
 
@@ -222,7 +146,7 @@ export const fetchMovieTrailer = createAsyncThunk(
 //     let config = {
 //       method: "delete",
 //       maxBodyLength: Infinity,
-//       url: `${import.meta.env.VITE_BACKEND_API}/api/Films/${id}`,
+//       url: `${import.meta.env.VITE_BACKEND_API}/api/genres/${id}`,
 //       headers: {
 //         Authorization: `Bearer ${token}`,
 //       },
@@ -231,7 +155,7 @@ export const fetchMovieTrailer = createAsyncThunk(
 //     try {
 //       const response = await axios.request(config);
 //       console.log(JSON.stringify(response.data));
-//       toast.success(`Film dengan id: ${id} berhasil di hapus`);
+//       toast.success(`genre dengan id: ${id} berhasil di hapus`);
 //       navigate("/");
 //     } catch (error) {
 //       toast.error(error?.response?.data?.message);

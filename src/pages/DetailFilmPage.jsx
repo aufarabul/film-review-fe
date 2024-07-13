@@ -8,10 +8,11 @@ import {
   Image,
   Card,
   Carousel,
+  Modal,
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import { getFilm, getCast } from "../redux/actions/film";
+import { getFilm, getCast, fetchMovieTrailer } from "../redux/actions/film";
 import { fetchMovieCredits } from "../redux/actions/cast";
 import { Box, Skeleton, Rating, Typography } from "@mui/material";
 import CardReview from "../components/CardReview/CardReview";
@@ -29,36 +30,31 @@ const detail = () => {
   const ulasanState = useSelector((state) => state.ulasan);
   const credits = useSelector((state) => state?.credits);
   const error = useSelector((state) => state?.error);
+  const [creditsList, setCreditsList] = useState([]);
+  const [trailer, setTrailer] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
-  const toggleVideo = () => {
-    setShowVideo(!showVideo);
+  const toggleModal = () => {
+    setShowModal(!showModal);
   };
   const ratings = film?.ulasans?.map((ulasan) => ulasan.rating) || [];
   const totalRating = ratings.reduce((acc, num) => acc + num, 0);
   const average =
     ratings.length > 0 ? (totalRating / ratings.length).toFixed(1) : "0.0";
   const idTmdb = film?.id_tmdb;
-  const [creditsList, setCreditsList] = useState([]);
-  //  const getCast = () => {
-  //    fetch(
-  //      `https://api.themoviedb.org/3/movie/${film?.id_tmdb}/credits?language=en-US`,
-  //      {
-  //        headers: {
-  //          accept: "application/json",
-  //          Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0Zjk1OTIwNTJlOTIwOTBhM2Q5NmI0MzFmY2QzZjU4NCIsIm5iZiI6MTcyMDcyMTkwNC4yNDAwMDEsInN1YiI6IjY2OTAxYjdlY2FmMjM2YmE2NDIzODUxNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.CwxacrGvB9aeUoGFiA0Z77wnqcagWw94VFKsfxmmdOQ`, // Replace with your actual API key
-  //        },
-  //      }
-  //    )
-  //      .then((res) => res.json())
-  //      .then((json) => setCreditsList(json.cast)) // Make sure to use "cast" instead of "results"
-  //      .catch((err) => console.error("Error fetching credits:", err));
-  //  };
+
   useEffect(() => {
-    dispatch(fetchMovieCredits);
     dispatch(getFilm(navigate, id, setIsLoading));
     dispatch(getCast(setCreditsList, idTmdb));
-  }, [dispatch, id, navigate, ulasanState, setCreditsList, idTmdb]);
-
+    dispatch(fetchMovieTrailer(idTmdb))
+      .unwrap()
+      .then((result) => {
+        setTrailer(result);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch trailer:", error);
+      });
+  }, [dispatch, id, navigate, ulasanState, setCreditsList, idTmdb, setTrailer]);
   const loadingbar = (
     <Box sx={{ pt: 0.5 }}>
       <Skeleton
@@ -71,17 +67,21 @@ const detail = () => {
       <Skeleton width="60%" />
     </Box>
   );
-  const emdedVideo = (
-    <iframe
-      style={{ width: "100%", height: "auto" }}
-      fluid
-      src="https://www.youtube.com/embed/sQQJEiESrK0"
-      title=""
-      frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      referrerpolicy="strict-origin-when-cross-origin"
-      allowfullscreen
-    ></iframe>
+  const embeddedVideo = (
+    <div className="responsive-iframe">
+      <iframe
+        rounded
+        width={460}
+        height={250}
+        relative
+        src={`https://www.youtube.com/embed/${trailer}`}
+        title=""
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen
+      ></iframe>
+    </div>
   );
   return (
     <>
@@ -130,7 +130,9 @@ const detail = () => {
               className="text-center m-5"
               style={{ backgroundColor: "#222831", color: "white" }}
             >
-              <Card.Header>BioskopNarasi Rating</Card.Header>
+              <Card.Header style={{ color: "#37B7C3" }}>
+                BioskopNarasi Rating
+              </Card.Header>
               <Card.Body>
                 <h1>{parseFloat(average)}/5</h1>
 
@@ -141,7 +143,9 @@ const detail = () => {
                   precision={0.5}
                 />
               </Card.Body>
-              <Card.Footer className="text-muted"></Card.Footer>
+              <Card.Footer className="">
+                {film?.ualasans?.length} ulasan
+              </Card.Footer>
             </Card>
           </Container>
         </Col>
@@ -150,16 +154,44 @@ const detail = () => {
           className=" d-flex justify-content-center align-items-center"
         >
           <div className="m-0">
-            <Button onClick={toggleVideo}>
+            <Button onClick={toggleModal}>
               {showVideo ? "Close Tralier" : "Watch Trailer"}
             </Button>
-            {showVideo && <div className="video-container">{emdedVideo}</div>}
+            <Modal
+              dialogClassName="custom-modal"
+              show={showModal}
+              onHide={toggleModal}
+              centered
+              aria-labelledby="contained-modal-title-vcenter"
+              className="d-flex justify-content-center"
+            >
+              <div className="p-3" style={{ backgroundColor: "black" }}>
+                {embeddedVideo}
+              </div>
+            </Modal>{" "}
           </div>
         </Col>
       </Row>
+      <div>
+        <h2
+          className="mx-5 my-2"
+          style={{ fontWeight: "bold", color: "#37B7C3" }}
+        >
+          Pemain
+        </h2>
+      </div>
       <Row>
         <CastCarousel creditsList={creditsList} />
       </Row>
+      <div>
+        <h2
+          className="mx-5 my-2"
+          style={{ fontWeight: "bold", color: "#37B7C3" }}
+        >
+          Ulasan
+        </h2>
+      </div>
+
       <Row className="cardReview">
         <CardReview film={film} />
       </Row>

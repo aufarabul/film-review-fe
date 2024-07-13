@@ -13,6 +13,7 @@ import Navbar from "./components/Navbar";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import DetailFilm from "./pages/DetailFilmPage";
+import GenrePage from "./pages/GenrePage";
 
 function App() {
   const router = createBrowserRouter([
@@ -35,6 +36,15 @@ function App() {
         <>
           <Navbar />
           <DetailFilm />
+        </>
+      ),
+    },
+    {
+      path: "/genre/:id",
+      element: (
+        <>
+          <Navbar />
+          <GenrePage />
         </>
       ),
     },
