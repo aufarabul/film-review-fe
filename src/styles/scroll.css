@@ -34,7 +34,10 @@
 .custom-modal {
 }
  */
-
+.film-overflow {
+  scrollbar-width: thin; /* Make the scrollbar thinner */
+  scrollbar-color: #a6bedd #6b6691;
+}
 .custom-modal .modal-content {
   width: 100%;
 }

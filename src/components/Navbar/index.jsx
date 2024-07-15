@@ -7,23 +7,25 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 
 function NavScrollExample() {
   return (
-    <Navbar expand="lg" className="bg-dark" data-bs-theme="dark">
-      <Container fluid>
+    <Navbar collapseOnSelect expand="lg" data-bs-theme="dark">
+      <Container className="m-3">
         <Navbar.Brand href="/">BioskopNarasi</Navbar.Brand>
-        <Navbar.Toggle aria-controls="navbarScroll" />
-        <Navbar.Collapse id="navbarScroll">
-          <Nav
-            className="me-auto my-2 my-lg-0"
-            style={{ maxHeight: "100px" }}
-            navbarScroll
-          >
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Nav className="me-auto " style={{ manHeight: "100px" }}>
             <Nav.Link href="/">Beranda</Nav.Link>
 
-            <NavDropdown title="Genre" id="navbarScrollingDropdown">
+            <NavDropdown title="Genre" id="collapsible-nav-dropdown">
               <NavDropdown.Item href="/genre/1">Horror</NavDropdown.Item>
               <NavDropdown.Item href="/genre/6">Drama </NavDropdown.Item>
 
               <NavDropdown.Item href="/genre/2">Comedy </NavDropdown.Item>
+              <NavDropdown.Item href="/genre/3">Action </NavDropdown.Item>
+              <NavDropdown.Item href="/genre/4">Thriller </NavDropdown.Item>
+              <NavDropdown.Item href="/genre/5">Romance </NavDropdown.Item>
+              <NavDropdown.Item href="/genre/7">
+                Science Fiction{" "}
+              </NavDropdown.Item>
             </NavDropdown>
             <Nav.Link href="#action2">Tentang Kami</Nav.Link>
           </Nav>

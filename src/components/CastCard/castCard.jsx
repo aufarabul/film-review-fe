@@ -78,9 +78,9 @@ import { useMediaQuery } from "react-responsive";
 import * as image from "../../assets/image/index";
 
 const CastCarousel = ({ creditsList }) => {
-  const isSmallScreen = useMediaQuery({ query: "(max-width: 500px)" }); // Check for 'sm' breakpoint
+  const isSmallScreen = useMediaQuery({ query: "(max-width: 1000px)" }); // Check for 'sm' breakpoint
   const cardsPerSlide = isSmallScreen ? 1 : 4; // Set cardsPerSlide based on screen size
-  const maxCredits = 7; // Maximum number of cast members to display
+  const maxCredits = 10; // Maximum number of cast members to display
 
   // Filter out credits without a character and limit to maxCredits
   const filteredCredits = creditsList

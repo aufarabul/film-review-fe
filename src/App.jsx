@@ -14,6 +14,7 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import DetailFilm from "./pages/DetailFilmPage";
 import GenrePage from "./pages/GenrePage";
+import Search from "./pages/SearchPage";
 
 function App() {
   const router = createBrowserRouter([
@@ -45,6 +46,15 @@ function App() {
         <>
           <Navbar />
           <GenrePage />
+        </>
+      ),
+    },
+    {
+      path: "/search",
+      element: (
+        <>
+          <Navbar />
+          <Search />
         </>
       ),
     },

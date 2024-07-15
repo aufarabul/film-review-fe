@@ -19,17 +19,26 @@ export const getFilms = () => async (dispatch, getState) => {
 
     dispatch(setFilms(data));
   } catch (error) {
-    // if (
-    //   error.response?.status === 401 &&
-    //   error.response?.data?.message === "jwt malformed"
-    // ) {
-    //   toast.error("Invalid authentication token. Please login again.");
-    // } else {
-    // Handle other errors
     toast.error(error?.response?.data?.message);
   }
 };
+export const searchFilms = (name) => async (dispatch, getState) => {
+  let config = {
+    method: "get",
+    maxBodyLength: Infinity,
+    url: `${import.meta.env.VITE_BACKEND_API}/api/film?name=${name}`,
+    headers: {},
+  };
 
+  try {
+    const response = await axios.request(config);
+    const { data } = response.data;
+
+    dispatch(setFilms(data));
+  } catch (error) {
+    toast.error(error?.response?.data?.message);
+  }
+};
 export const getFilm = (navigate, id, setIsLoading) => async (dispatch) => {
   setIsLoading(true);
 
@@ -53,37 +62,62 @@ export const getFilm = (navigate, id, setIsLoading) => async (dispatch) => {
   setIsLoading(false);
 };
 
-// export const getCast = (setCreditsList, idTmdb) => async (dispatch) => {
-//   fetch(`https://api.themoviedb.org/3/movie/${idTmdb}/credits`, {
-//     headers: {
-//       accept: "application/json",
-//       Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0Zjk1OTIwNTJlOTIwOTBhM2Q5NmI0MzFmY2QzZjU4NCIsIm5iZiI6MTcyMDcyMTkwNC4yNDAwMDEsInN1YiI6IjY2OTAxYjdlY2FmMjM2YmE2NDIzODUxNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.CwxacrGvB9aeUoGFiA0Z77wnqcagWw94VFKsfxmmdOQ`, // Replace with your actual API key
-//     },
-//   })
-//     .then((res) => res.json())
-//     .then((json) => setCreditsList(json.cast)) // Make sure to use "cast" instead of "results"
-//     .catch((err) => console.error("Error fetching credits:", err));
-// };
+// export const getCast =
+//   (setCreditsList, idTmdb, retryCount = 3) =>
+//   async (dispatch) => {
+//     const fetchTrailer = async (retryCount) => {
+//       try {
+//         const response = await fetch(
+//           `https://api.themoviedb.org/3/movie/${idTmdb}/credits`,
+//           {
+//             headers: {
+//               accept: "application/json",
+//               Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0Zjk1OTIwNTJlOTIwOTBhM2Q5NmI0MzFmY2QzZjU4NCIsIm5iZiI6MTcyMDcyMTkwNC4yNDAwMDEsInN1YiI6IjY2OTAxYjdlY2FmMjM2YmE2NDIzODUxNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.CwxacrGvB9aeUoGFiA0Z77wnqcagWw94VFKsfxmmdOQ`, // Replace with your actual API key
+//             },
+//           }
+//         );
+
+//         if (!response.ok) {
+//           if (response.status === 404 && retryCount > 0) {
+//             console.warn(`Retrying... ${retryCount} attempts left`);
+//             return fetchTrailer(retryCount - 1);
+//           } else {
+//             throw new Error(`HTTP error! status: ${response.status}`);
+//           }
+//         }
+
+//         const data = await response.json();
+//         setCreditsList(data.cast);
+//       } catch (err) {
+//         console.error("Error fetching credits:", err);
+//       }
+//     };
+
+//     await fetchTrailer(retryCount);
+//   };
 
 export const getCast =
-  (setCreditsList, idTmdb, retryCount = 3) =>
+  (setCreditsList, idTmdb, mediaType, retryCount = 3) =>
   async (dispatch) => {
-    const fetchCredits = async (retryCount) => {
+    const fetchTrailer = async (retryCount) => {
       try {
-        const response = await fetch(
-          `https://api.themoviedb.org/3/movie/${idTmdb}/credits`,
-          {
-            headers: {
-              accept: "application/json",
-              Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0Zjk1OTIwNTJlOTIwOTBhM2Q5NmI0MzFmY2QzZjU4NCIsIm5iZiI6MTcyMDcyMTkwNC4yNDAwMDEsInN1YiI6IjY2OTAxYjdlY2FmMjM2YmE2NDIzODUxNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.CwxacrGvB9aeUoGFiA0Z77wnqcagWw94VFKsfxmmdOQ`, // Replace with your actual API key
-            },
-          }
-        );
+        const baseUrl =
+          mediaType === "movie"
+            ? "https://api.themoviedb.org/3/movie/"
+            : "https://api.themoviedb.org/3/tv/";
+        const url = `${baseUrl}${idTmdb}/credits`;
+
+        const response = await fetch(url, {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0Zjk1OTIwNTJlOTIwOTBhM2Q5NmI0MzFmY2QzZjU4NCIsIm5iZiI6MTcyMDcyMTkwNC4yNDAwMDEsInN1YiI6IjY2OTAxYjdlY2FmMjM2YmE2NDIzODUxNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.CwxacrGvB9aeUoGFiA0Z77wnqcagWw94VFKsfxmmdOQ`, // Replace with your actual API key
+          },
+        });
 
         if (!response.ok) {
           if (response.status === 404 && retryCount > 0) {
             console.warn(`Retrying... ${retryCount} attempts left`);
-            return fetchCredits(retryCount - 1);
+            return fetchTrailer(retryCount - 1);
           } else {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
@@ -96,7 +130,7 @@ export const getCast =
       }
     };
 
-    await fetchCredits(retryCount);
+    await fetchTrailer(retryCount);
   };
 
 const fetchWithRetry = async (url, options, retries = 3, delay = 1000) => {
@@ -121,25 +155,216 @@ const fetchWithRetry = async (url, options, retries = 3, delay = 1000) => {
   }
 };
 
-export const fetchMovieTrailer = createAsyncThunk(
-  "movies/fetchMovieTrailer",
-  async (idTmdb) => {
-    const response = await fetch(
-      `https://api.themoviedb.org/3/movie/${idTmdb}/videos`,
-      {
+// export const fetchMovieTrailer = async (
+//   setTrailer,
+//   idTmdb,
+//   mediaType,
+//   retryCount = 5
+// ) => {
+//   // Function to fetch the trailer
+//   const fetchTrailer = async (retry) => {
+//     try {
+//       const baseUrl =
+//         mediaType === "movie"
+//           ? "https://api.themoviedb.org/3/movie/"
+//           : "https://api.themoviedb.org/3/tv/";
+//       const url = `${baseUrl}${idTmdb}/videos`;
+
+//       const response = await fetch(url, {
+//         headers: {
+//           accept: "application/json",
+//           Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0Zjk1OTIwNTJlOTIwOTBhM2Q5NmI0MzFmY2QzZjU4NCIsIm5iZiI6MTcyMDcyMTkwNC4yNDAwMDEsInN1YiI6IjY2OTAxYjdlY2FmMjM2YmE2NDIzODUxNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.CwxacrGvB9aeUoGFiA0Z77wnqcagWw94VFKsfxmmdOQ`, // Replace with your actual API key
+//         },
+//       });
+
+//       if (!response.ok) {
+//         if (response.status === 404 && retry > 0) {
+//           console.warn(`Retrying... ${retry} attempts left`);
+//           return fetchTrailer(retry - 1);
+//         } else {
+//           throw new Error(`HTTP error! status: ${response.status}`);
+//         }
+//       }
+
+//       const data = await response.json();
+//       const trailer = data.results.find(
+//         (video) => video.type === "Trailer" && video.site === "YouTube"
+//       );
+
+//       setTrailer(trailer ? trailer.key : null);
+//     } catch (err) {
+//       console.error("Error fetching trailer:", err);
+//       setTrailer(null); // Or handle error differently (e.g., set error state)
+//     }
+//   };
+
+//   await fetchTrailer(retryCount);
+// };
+
+export const fetchMovieTrailer = async (setTrailer, idTmdb, mediaType) => {
+  const baseUrl =
+    mediaType === "movie"
+      ? "https://api.themoviedb.org/3/movie/"
+      : "https://api.themoviedb.org/3/tv/";
+  const urls = [
+    `${baseUrl}${idTmdb}/videos`,
+    `${baseUrl}${idTmdb}/videos?language=en-US`,
+    `${baseUrl}${idTmdb}/videos?language=id-ID`,
+  ];
+
+  for (const url of urls) {
+    try {
+      const response = await fetch(url, {
         headers: {
           accept: "application/json",
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0Zjk1OTIwNTJlOTIwOTBhM2Q5NmI0MzFmY2QzZjU4NCIsIm5iZiI6MTcyMDg2MzYzMy41NTY2NTksInN1YiI6IjY2OTAxYjdlY2FmMjM2YmE2NDIzODUxNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.KSZfnotW2SixjmktIWapso9VtDEWDSK_VZvCrdWwR2o`, // Ganti dengan API key Anda
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0Zjk1OTIwNTJlOTIwOTBhM2Q5NmI0MzFmY2QzZjU4NCIsIm5iZiI6MTcyMDcyMTkwNC4yNDAwMDEsInN1YiI6IjY2OTAxYjdlY2FmMjM2YmE2NDIzODUxNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.CwxacrGvB9aeUoGFiA0Z77wnqcagWw94VFKsfxmmdOQ`, // Replace with your actual API key
         },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    );
-    const data = await response.json();
-    const trailer = data.results.find(
-      (video) => video.type === "Trailer" && video.site === "YouTube"
-    );
-    return trailer ? trailer.key : null;
+
+      const data = await response.json();
+      const trailer = data.results.find(
+        (video) => video.type === "Trailer" && video.site === "YouTube"
+      );
+
+      if (trailer) {
+        setTrailer(trailer.key);
+        return;
+      }
+    } catch (err) {
+      console.error(`Error fetching trailer from ${url}:`, err);
+    }
   }
-);
+
+  // If no trailer found after all URLs
+  setTrailer(null);
+};
+
+// export const fetchMovieTrailer = async (
+//   setTrailer,
+//   idTmdb,
+//   mediaType,
+//   retry = 3
+// ) => {
+//   // Function to fetch the trailer
+//   const fetchTrailer = async (retry, language = "") => {
+//     try {
+//       const baseUrl =
+//         mediaType === "movie"
+//           ? "https://api.themoviedb.org/3/movie/"
+//           : "https://api.themoviedb.org/3/tv/";
+//       const url = `${baseUrl}${idTmdb}/videos${language}`;
+
+//       const response = await fetch(url, {
+//         headers: {
+//           accept: "application/json",
+//           Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0Zjk1OTIwNTJlOTIwOTBhM2Q5NmI0MzFmY2QzZjU4NCIsIm5iZiI6MTcyMDcyMTkwNC4yNDAwMDEsInN1YiI6IjY2OTAxYjdlY2FmMjM2YmE2NDIzODUxNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.CwxacrGvB9aeUoGFiA0Z77wnqcagWw94VFKsfxmmdOQ`, // Replace with your actual API key
+//         },
+//       });
+
+//       if (!response.ok) {
+//         if (response.status === 404 && retry > 0) {
+//           console.warn(`Retrying... ${retry} attempts left`);
+//           return fetchTrailer(retry - 1, language);
+//         } else {
+//           throw new Error(`HTTP error! status: ${response.status}`);
+//         }
+//       }
+
+//       const data = await response.json();
+//       if (!data.results || data.results.length === 0) {
+//         throw new Error("No trailers found");
+//       }
+
+//       let trailer = data.results.find(
+//         (video) => video.type === "Trailer" && video.site === "YouTube"
+//       );
+
+//       if (!trailer && language === "") {
+//         // Try with English language if not found
+//         return fetchTrailer(retry, "?language=en-US");
+//       }
+
+//       if (!trailer && language === "?language=en-US") {
+//         // Try with Indonesian language if not found with English
+//         return fetchTrailer(retry, "?language=id-ID");
+//       }
+
+//       setTrailer(trailer ? trailer.key : null);
+//     } catch (err) {
+//       console.error("Error fetching trailer:", err);
+//       if (retry > 0) {
+//         console.warn(`Retrying... ${retry} attempts left`);
+//         return fetchTrailer(retry - 1, language);
+//       } else {
+//         setTrailer(null); // Or handle error differently (e.g., set error state)
+//       }
+//     }
+//   };
+
+//   await fetchTrailer(retry);
+// };
+
+// export const fetchMovieTrailer = createAsyncThunk(
+//   "movies/fetchMovieTrailer",
+//   async (idTmdb) => {
+//     const response = await fetch(
+//       `https://api.themoviedb.org/3/movie/${idTmdb}/videos`,
+//       {
+//         headers: {
+//           accept: "application/json",
+//           Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0Zjk1OTIwNTJlOTIwOTBhM2Q5NmI0MzFmY2QzZjU4NCIsIm5iZiI6MTcyMDg2MzYzMy41NTY2NTksInN1YiI6IjY2OTAxYjdlY2FmMjM2YmE2NDIzODUxNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.KSZfnotW2SixjmktIWapso9VtDEWDSK_VZvCrdWwR2o`, // Ganti dengan API key Anda
+//         },
+//       }
+//     );
+//     const data = await response.json();
+//     const trailer = data.results.find(
+//       (video) => video.type === "Trailer" && video.site === "YouTube"
+//     );
+//     return trailer ? trailer.key : null;
+//   }
+// );
+
+export const getProvider =
+  (setProviderList, idTmdb, mediaType, retryCount = 3) =>
+  async (dispatch) => {
+    const fetchTrailer = async (retryCount) => {
+      try {
+        const baseUrl =
+          mediaType === "movie"
+            ? "https://api.themoviedb.org/3/movie/"
+            : "https://api.themoviedb.org/3/tv/";
+        const url = `${baseUrl}${idTmdb}/watch/providers`;
+
+        const response = await fetch(url, {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0Zjk1OTIwNTJlOTIwOTBhM2Q5NmI0MzFmY2QzZjU4NCIsIm5iZiI6MTcyMDcyMTkwNC4yNDAwMDEsInN1YiI6IjY2OTAxYjdlY2FmMjM2YmE2NDIzODUxNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.CwxacrGvB9aeUoGFiA0Z77wnqcagWw94VFKsfxmmdOQ`, // Replace with your actual API key
+          },
+        });
+
+        if (!response.ok) {
+          if (response.status === 404 && retryCount > 0) {
+            console.warn(`Retrying... ${retryCount} attempts left`);
+            return fetchTrailer(retryCount - 1);
+          } else {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+        }
+
+        const data = await response.json();
+        setProviderList(data.results);
+      } catch (err) {
+        console.error("Error fetching credits:", err);
+      }
+    };
+
+    await fetchTrailer(retryCount);
+  };
+
 // export const AddFilm =
 //   (navigate, plate, manufacture, model, year, image, setIsLoading) =>
 //   async (dispatch, getState) => {

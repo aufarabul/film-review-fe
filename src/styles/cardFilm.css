@@ -13,3 +13,45 @@
   z-index: 1; /* Ensure the hovered card stays on top */
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
 }
+
+.card-container {
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 10px;
+}
+/* 
+.film-card-small {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: auto;
+}
+
+.film-card-small .car-film {
+  width: 40%;
+  height: auto;
+  object-fit: cover;
+}
+
+.film-card-small .card-body {
+  width: 60%;
+  padding: 10px;
+}
+
+@media (max-width: 500px) {
+  .film-card-small {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .film-card-small .car-film {
+    width: 100%;
+    height: auto;
+  }
+
+  .film-card-small .card-body {
+    width: 100%;
+    text-align: center;
+  }
+} */

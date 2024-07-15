@@ -39,18 +39,20 @@ function Home() {
         </div>
         <div className="col-md-6"></div>
       </Row>
-      <Row>
-        {isLoading
-          ? Array.from(new Array(6)).map((_, index) => (
-              <Col key={index} md={4}>
-                {loadingbar}
-              </Col>
-            ))
-          : genre?.films?.length > 0 &&
-            genre?.films?.map((film) => (
-              <FilmsCard key={film?.id} film={film} />
-            ))}
-      </Row>
+      <Container>
+        <Row>
+          {isLoading
+            ? Array.from(new Array(6)).map((_, index) => (
+                <Col key={index} md={4}>
+                  {loadingbar}
+                </Col>
+              ))
+            : genre?.films?.length > 0 &&
+              genre?.films?.map((film) => (
+                <FilmsCard key={film?.id} film={film} />
+              ))}
+        </Row>
+      </Container>
     </>
   );
 }

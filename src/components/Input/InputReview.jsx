@@ -24,7 +24,7 @@ function InputReview({ id }) {
     // dispatch the InputReview action
     dispatch(AddUlasan(navigate, name, id, comment, rating, setIsLoading));
   };
-  console.log(rating);
+
   return (
     <>
       <Form

@@ -1,17 +1,16 @@
 import Carousel from "../components/Home/home";
 import { Row, Col, Container, Button } from "react-bootstrap";
-import FilmsCard from "../components/CardFilm/cardFilm";
-
-function home() {
+import Search from "../components/SearchPage/search";
+function SearchPage() {
   return (
     <>
       <Row>
         <Container>
-          <Carousel />
+          <Search />
         </Container>
       </Row>
     </>
   );
 }
 
-export default home;
+export default SearchPage;

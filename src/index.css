@@ -75,6 +75,8 @@ body {
   /* overflow-x: hidden; Disable horizontal scrolling */
   /* scrollbar-width: 200px; 
   scrollbar-color: #273f5e #ffffff;  */
+  scrollbar-width: thin; /* Make the scrollbar thinner */
+  scrollbar-color: #a6bedd #6b6691;
 }
 
 .row {

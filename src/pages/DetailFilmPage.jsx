@@ -12,7 +12,12 @@ import {
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import { getFilm, getCast, fetchMovieTrailer } from "../redux/actions/film";
+import {
+  getFilm,
+  getCast,
+  fetchMovieTrailer,
+  getProvider,
+} from "../redux/actions/film";
 import { fetchMovieCredits } from "../redux/actions/cast";
 import { Box, Skeleton, Rating, Typography } from "@mui/material";
 import CardReview from "../components/CardReview/CardReview";
@@ -22,7 +27,6 @@ import CastCarousel from "../components/CastCard/castCard";
 const detail = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [value, setValue] = useState(4.5);
   const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
   const { film } = useSelector((state) => state?.film);
@@ -33,7 +37,7 @@ const detail = () => {
   const [creditsList, setCreditsList] = useState([]);
   const [trailer, setTrailer] = useState([]);
   const [showModal, setShowModal] = useState(false);
-
+  const [provider, setProviderList] = useState([]);
   const toggleModal = () => {
     setShowModal(!showModal);
   };
@@ -42,19 +46,33 @@ const detail = () => {
   const average =
     ratings.length > 0 ? (totalRating / ratings.length).toFixed(1) : "0.0";
   const idTmdb = film?.id_tmdb;
-
+  const mediaType = film?.type;
   useEffect(() => {
-    dispatch(getFilm(navigate, id, setIsLoading));
-    dispatch(getCast(setCreditsList, idTmdb));
-    dispatch(fetchMovieTrailer(idTmdb))
-      .unwrap()
-      .then((result) => {
-        setTrailer(result);
-      })
-      .catch((error) => {
+    const fetchData = async () => {
+      dispatch(getFilm(navigate, id, setIsLoading));
+      dispatch(getCast(setCreditsList, idTmdb, mediaType));
+      dispatch(getProvider(setProviderList, idTmdb, mediaType));
+
+      try {
+        await fetchMovieTrailer(setTrailer, idTmdb, mediaType);
+      } catch (error) {
         console.error("Failed to fetch trailer:", error);
-      });
-  }, [dispatch, id, navigate, ulasanState, setCreditsList, idTmdb, setTrailer]);
+      }
+    };
+
+    fetchData();
+  }, [
+    dispatch,
+    id,
+    navigate,
+    ulasanState,
+    setCreditsList,
+    idTmdb,
+    mediaType,
+    setTrailer,
+    setProviderList,
+    setIsLoading,
+  ]);
   const loadingbar = (
     <Box sx={{ pt: 0.5 }}>
       <Skeleton
@@ -68,21 +86,34 @@ const detail = () => {
     </Box>
   );
   const embeddedVideo = (
-    <div className="responsive-iframe">
-      <iframe
-        rounded
-        width={460}
-        height={250}
-        relative
-        src={`https://www.youtube.com/embed/${trailer}`}
-        title=""
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerpolicy="strict-origin-when-cross-origin"
-        allowfullscreen
-      ></iframe>
-    </div>
+    <>
+      {trailer ? (
+        <div className="responsive-iframe">
+          <iframe
+            rounded // Assuming this is a custom class, remove if not needed
+            width={460}
+            height={250}
+            src={`https://www.youtube.com/embed/${trailer}`}
+            title=""
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+          ></iframe>
+        </div>
+      ) : (
+        <p style={{ color: "white" }}>Maaf, trailer belum tersedia</p>
+      )}
+    </>
   );
+  let providerLogo;
+  if (provider?.ID?.flatrate) {
+    providerLogo = provider?.ID?.flatrate?.find(
+      (item) => item.logo_path
+    )?.logo_path;
+  } else {
+    providerLogo = provider?.ID?.ads?.find((item) => item.logo_path)?.logo_path;
+  }
   return (
     <>
       <Row>
@@ -119,10 +150,18 @@ const detail = () => {
             <p style={{ color: "white" }}>{film?.genre?.nama_genre}</p>
             <p style={{ color: "white", fontWeight: "800" }}>Sipnosis :</p>
             <p style={{ color: "white" }}>{film?.description}</p>
+            <Button
+              variant="outline-light"
+              className="rounded-5 d-flex justify-content-center"
+              onClick={toggleModal}
+            >
+              {/* {showModal ? "Close Tralier" : "Watch Trailer"} */}
+              Watch Trailer
+            </Button>
           </Container>
         </Col>
       </Row>
-      <Row>
+      <Row className="my-4">
         <Col md={6} className=" d-flex justify-content-center">
           <Container className=" d-flex justify-content-center">
             <Card
@@ -144,19 +183,38 @@ const detail = () => {
                 />
               </Card.Body>
               <Card.Footer className="">
-                {film?.ualasans?.length} ulasan
+                {film?.ulasans?.length == 0
+                  ? "Belum ada Ulasan"
+                  : `${film?.ulasans?.length} ulasan`}{" "}
               </Card.Footer>
             </Card>
           </Container>
         </Col>
-        <Col
-          md={6}
-          className=" d-flex justify-content-center align-items-center"
-        >
+        <Col md={6} className="row d-flex justify-content-center">
+          <h3
+            className="d-flex justify-content-center"
+            style={{ fontWeight: "bold", color: "#37B7C3" }}
+          >
+            Dapat anda saksikan di :
+          </h3>
+          <p className="d-flex justify-content-center">
+            <Image
+              style={{ maxHeight: "150px" }}
+              fluid
+              className="rounded-4 mt-5 "
+              src={`https://image.tmdb.org/t/p/w500${providerLogo}`}
+            />
+          </p>
+          <h4
+            className="d-flex justify-content-center"
+            style={{ color: "#37B7C3" }}
+          >
+            {
+              provider?.ID?.flatrate?.find((item) => item.provider_name)
+                ?.provider_name
+            }
+          </h4>
           <div className="m-0">
-            <Button onClick={toggleModal}>
-              {showVideo ? "Close Tralier" : "Watch Trailer"}
-            </Button>
             <Modal
               dialogClassName="custom-modal"
               show={showModal}
@@ -177,7 +235,7 @@ const detail = () => {
           className="mx-5 my-2"
           style={{ fontWeight: "bold", color: "#37B7C3" }}
         >
-          Pemain
+          Pemeran/Cast
         </h2>
       </div>
       <Row>
@@ -185,17 +243,28 @@ const detail = () => {
       </Row>
       <div>
         <h2
-          className="mx-5 my-2"
+          className="mx-5 my-3"
           style={{ fontWeight: "bold", color: "#37B7C3" }}
         >
           Ulasan
         </h2>
       </div>
+      {film?.ulasans == 0 ? (
+        <Container>
+          <h4
+            className="mx-5 my-5 d-flex justify-content-center"
+            style={{ fontWeight: "bold", color: "#37B7C3" }}
+          >
+            Belum ada Ulasan
+          </h4>
+        </Container>
+      ) : (
+        <Row className="cardReview my-4">
+          <CardReview film={film} />
+        </Row>
+      )}
 
-      <Row className="cardReview">
-        <CardReview film={film} />
-      </Row>
-      <Container className="mt-5">
+      <Container className="mt-5 my-5">
         <InputReview id={film?.id} />
       </Container>
     </>

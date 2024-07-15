@@ -10,7 +10,7 @@ const filmsCard = ({ film }) => {
   const average =
     ratings.length > 0 ? (totalRating / ratings.length).toFixed(1) : "0";
   return (
-    <Col className="films-Card mx-2 mt-5">
+    <Col className="films-Card">
       <Card
         className="film-card  shadow p-3 mb-5 rounded "
         fluid
