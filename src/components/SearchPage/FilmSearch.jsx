@@ -25,7 +25,6 @@ const FilmSearch = () => {
   const handleSubmit = (e) => {
     e.preventDefault(); // Prevent the default form submission behavior
     dispatch(searchFilms(searchTerm));
-    searchTerm = "";
   };
 
   return (

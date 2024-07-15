@@ -46,7 +46,8 @@ const detail = () => {
   const average =
     ratings.length > 0 ? (totalRating / ratings.length).toFixed(1) : "0.0";
   const idTmdb = film?.id_tmdb;
-  const mediaType = film?.type;
+  let mediaType = film?.type;
+
   useEffect(() => {
     const fetchData = async () => {
       dispatch(getFilm(navigate, id, setIsLoading));
@@ -73,6 +74,7 @@ const detail = () => {
     setProviderList,
     setIsLoading,
   ]);
+
   const loadingbar = (
     <Box sx={{ pt: 0.5 }}>
       <Skeleton
@@ -90,15 +92,15 @@ const detail = () => {
       {trailer ? (
         <div className="responsive-iframe">
           <iframe
-            rounded // Assuming this is a custom class, remove if not needed
+            // Assuming this is a custom class, remove if not needed
             width={460}
             height={250}
             src={`https://www.youtube.com/embed/${trailer}`}
             title=""
-            frameborder="0"
+            frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerPolicy="strict-origin-when-cross-origin"
-            allowfullscreen
+            allowFullscreen
           ></iframe>
         </div>
       ) : (

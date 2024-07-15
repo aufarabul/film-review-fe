@@ -201,63 +201,19 @@ const fetchWithRetry = async (url, options, retries = 3, delay = 1000) => {
 //   await fetchTrailer(retryCount);
 // };
 
-export const fetchMovieTrailer = async (setTrailer, idTmdb, mediaType) => {
-  const baseUrl =
-    mediaType === "movie"
-      ? "https://api.themoviedb.org/3/movie/"
-      : "https://api.themoviedb.org/3/tv/";
-  const urls = [
-    `${baseUrl}${idTmdb}/videos`,
-    `${baseUrl}${idTmdb}/videos?language=en-US`,
-    `${baseUrl}${idTmdb}/videos?language=id-ID`,
-  ];
+// export const fetchMovieTrailer = async (setTrailer, idTmdb, mediaType) => {
+//   const baseUrl =
+//     mediaType === "movie"
+//       ? "https://api.themoviedb.org/3/movie/"
+//       : "https://api.themoviedb.org/3/tv/";
+//   const urls = [
+//     `${baseUrl}${idTmdb}/videos`,
+//     `${baseUrl}${idTmdb}/videos?language=en-US`,
+//     `${baseUrl}${idTmdb}/videos?language=id-ID`,
+//   ];
 
-  for (const url of urls) {
-    try {
-      const response = await fetch(url, {
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0Zjk1OTIwNTJlOTIwOTBhM2Q5NmI0MzFmY2QzZjU4NCIsIm5iZiI6MTcyMDcyMTkwNC4yNDAwMDEsInN1YiI6IjY2OTAxYjdlY2FmMjM2YmE2NDIzODUxNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.CwxacrGvB9aeUoGFiA0Z77wnqcagWw94VFKsfxmmdOQ`, // Replace with your actual API key
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      const trailer = data.results.find(
-        (video) => video.type === "Trailer" && video.site === "YouTube"
-      );
-
-      if (trailer) {
-        setTrailer(trailer.key);
-        return;
-      }
-    } catch (err) {
-      console.error(`Error fetching trailer from ${url}:`, err);
-    }
-  }
-
-  // If no trailer found after all URLs
-  setTrailer(null);
-};
-
-// export const fetchMovieTrailer = async (
-//   setTrailer,
-//   idTmdb,
-//   mediaType,
-//   retry = 3
-// ) => {
-//   // Function to fetch the trailer
-//   const fetchTrailer = async (retry, language = "") => {
+//   for (const url of urls) {
 //     try {
-//       const baseUrl =
-//         mediaType === "movie"
-//           ? "https://api.themoviedb.org/3/movie/"
-//           : "https://api.themoviedb.org/3/tv/";
-//       const url = `${baseUrl}${idTmdb}/videos${language}`;
-
 //       const response = await fetch(url, {
 //         headers: {
 //           accept: "application/json",
@@ -266,47 +222,89 @@ export const fetchMovieTrailer = async (setTrailer, idTmdb, mediaType) => {
 //       });
 
 //       if (!response.ok) {
-//         if (response.status === 404 && retry > 0) {
-//           console.warn(`Retrying... ${retry} attempts left`);
-//           return fetchTrailer(retry - 1, language);
-//         } else {
-//           throw new Error(`HTTP error! status: ${response.status}`);
-//         }
+//         throw new Error(`HTTP error! status: ${response.status}`);
 //       }
 
 //       const data = await response.json();
-//       if (!data.results || data.results.length === 0) {
-//         throw new Error("No trailers found");
-//       }
-
-//       let trailer = data.results.find(
+//       const trailer = data.results.find(
 //         (video) => video.type === "Trailer" && video.site === "YouTube"
 //       );
 
-//       if (!trailer && language === "") {
-//         // Try with English language if not found
-//         return fetchTrailer(retry, "?language=en-US");
+//       if (trailer) {
+//         setTrailer(trailer.key);
+//         return;
 //       }
-
-//       if (!trailer && language === "?language=en-US") {
-//         // Try with Indonesian language if not found with English
-//         return fetchTrailer(retry, "?language=id-ID");
-//       }
-
-//       setTrailer(trailer ? trailer.key : null);
 //     } catch (err) {
-//       console.error("Error fetching trailer:", err);
-//       if (retry > 0) {
-//         console.warn(`Retrying... ${retry} attempts left`);
-//         return fetchTrailer(retry - 1, language);
-//       } else {
-//         setTrailer(null); // Or handle error differently (e.g., set error state)
-//       }
+//       console.error(`Error fetching trailer from ${url}:`, err);
 //     }
-//   };
+//   }
 
-//   await fetchTrailer(retry);
+//   // If no trailer found after all URLs
+//   setTrailer(null);
 // };
+
+export const fetchMovieTrailer = async (
+  setTrailer,
+  idTmdb,
+  mediaType,
+  retry = 3
+) => {
+  // Function to fetch the trailer
+  const fetchTrailer = async (retry, language = "") => {
+    try {
+      const baseUrl =
+        mediaType === "movie"
+          ? "https://api.themoviedb.org/3/movie/"
+          : "https://api.themoviedb.org/3/tv/";
+      const url = `${baseUrl}${idTmdb}/videos${language}`;
+
+      const response = await fetch(url, {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0Zjk1OTIwNTJlOTIwOTBhM2Q5NmI0MzFmY2QzZjU4NCIsIm5iZiI6MTcyMDcyMTkwNC4yNDAwMDEsInN1YiI6IjY2OTAxYjdlY2FmMjM2YmE2NDIzODUxNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.CwxacrGvB9aeUoGFiA0Z77wnqcagWw94VFKsfxmmdOQ`, // Replace with your actual API key
+        },
+      });
+
+      if (!response.ok) {
+        if (response.status === 404 && retry > 0) {
+          console.warn(`Retrying... ${retry} attempts left`);
+          return fetchTrailer(retry - 1, language);
+        } else {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+      }
+
+      const data = await response.json();
+      if (!data.results || data.results.length === 0) {
+        throw new Error("No trailers found");
+      }
+
+      let trailer = data.results.find(
+        (video) => video.type === "Trailer" && video.site === "YouTube"
+      );
+
+      if (!trailer && language === "") {
+        // Try with English language if not found
+        return fetchTrailer(retry, "?language=en-US");
+      }
+
+      if (!trailer && language === "?language=en-US") {
+        // Try with Indonesian language if not found with English
+        return fetchTrailer(retry, "?language=id-ID");
+      }
+
+      setTrailer(trailer ? trailer.key : null);
+    } catch (err) {
+      console.error("Error fetching trailer:", err);
+      if (retry > 0) {
+        console.warn(`Retrying... ${retry} attempts left`);
+        return fetchTrailer(retry - 1, language);
+      }
+    }
+  };
+
+  await fetchTrailer(retry);
+};
 
 // export const fetchMovieTrailer = createAsyncThunk(
 //   "movies/fetchMovieTrailer",
