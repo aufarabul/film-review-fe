@@ -47,9 +47,9 @@ const FilmList = () => {
         ) : (
           <h4
             className="d-flex justify-content-center"
-            style={{ color: "#37B7C3" }}
+            style={{ color: "#37B7C3", marginBottom: "400px" }}
           >
-            Film Tidak Ditemukan
+            Maaf Film Tidak Ditemukan
           </h4>
         )}
       </Row>

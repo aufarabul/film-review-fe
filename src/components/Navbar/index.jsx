@@ -27,6 +27,9 @@ function NavScrollExample() {
                 Science Fiction{" "}
               </NavDropdown.Item>
             </NavDropdown>
+            <Nav.Link href="/movies">Film</Nav.Link>
+            <Nav.Link href="/tv">TV Series</Nav.Link>
+
             <Nav.Link href="#action2">Tentang Kami</Nav.Link>
           </Nav>
         </Navbar.Collapse>

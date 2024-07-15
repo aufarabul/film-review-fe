@@ -15,6 +15,9 @@ import LoginPage from "./pages/LoginPage";
 import DetailFilm from "./pages/DetailFilmPage";
 import GenrePage from "./pages/GenrePage";
 import Search from "./pages/SearchPage";
+import Footer from "./components/Footer";
+import Film from "./components/Film";
+import TvSeries from "./components/TvSeries";
 
 function App() {
   const router = createBrowserRouter([
@@ -24,6 +27,7 @@ function App() {
         <>
           <Navbar />
           <HomePage />
+          <Footer />
         </>
       ),
     },
@@ -37,6 +41,7 @@ function App() {
         <>
           <Navbar />
           <DetailFilm />
+          <Footer />
         </>
       ),
     },
@@ -46,6 +51,7 @@ function App() {
         <>
           <Navbar />
           <GenrePage />
+          <Footer />
         </>
       ),
     },
@@ -55,6 +61,28 @@ function App() {
         <>
           <Navbar />
           <Search />
+          <Footer />
+        </>
+      ),
+    },
+    {
+      path: "/movies",
+      element: (
+        <>
+          <Navbar />
+          <Film />
+          <Footer />
+        </>
+      ),
+    },
+
+    {
+      path: "/tv",
+      element: (
+        <>
+          <Navbar />
+          <TvSeries />
+          <Footer />
         </>
       ),
     },

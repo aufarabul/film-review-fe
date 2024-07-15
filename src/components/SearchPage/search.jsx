@@ -20,6 +20,8 @@ function Home() {
     setSearchTerm(filmName);
   };
   useEffect(() => {
+    window.scrollTo(0, 0);
+
     dispatch(getFilms()).finally(() => setLoading(false));
   }, [dispatch]);
 
@@ -52,16 +54,3 @@ function Home() {
 }
 
 export default Home;
-
-{
-  /* <Row>
-        {isLoading
-          ? Array.from(new Array(6)).map((_, index) => (
-              <Col key={index} md={4} className="mx-2">
-                {loadingbar}
-              </Col>
-            ))
-          : film.length > 0 &&
-            film.map((film) => <FilmsCard key={film?.id} film={film} />)}
-      </Row> */
-}

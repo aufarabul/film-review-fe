@@ -49,6 +49,8 @@ const detail = () => {
   let mediaType = film?.type;
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+
     const fetchData = async () => {
       dispatch(getFilm(navigate, id, setIsLoading));
       dispatch(getCast(setCreditsList, idTmdb, mediaType));

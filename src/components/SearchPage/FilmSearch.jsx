@@ -46,33 +46,40 @@ const FilmSearch = () => {
           Search
         </Button>
         {searchTerm && film.length > 0 && (
-          <ul
-            style={{
-              listStyleType: "none",
-              padding: 0,
-              position: "absolute",
-              top: "100%",
-              left: 0,
-              width: "100%",
-              backgroundColor: "white",
-              zIndex: 1000,
-              border: "1px solid #ccc",
-              maxWidth: "1480px",
-            }}
+          <div
+            className="film-overflow  flex-col overflow-auto"
+            style={{ maxHeight: "500px" }}
           >
-            {film.map((film) => (
-              <li
-                key={film.id}
-                onClick={() => handleSelectFilm(film.nama_film)}
-                style={{
-                  cursor: "pointer",
-                  padding: "5px 10px",
-                }}
-              >
-                {film.nama_film}
-              </li>
-            ))}
-          </ul>
+            <ul
+              style={{
+                listStyleType: "none",
+                padding: 0,
+                position: "absolute",
+                top: "100%",
+                left: 0,
+                width: "100%",
+                backgroundColor: "white",
+                zIndex: 1000,
+                border: "1px solid #ccc",
+                maxWidth: "1480px",
+                maxHeight: "500px", // set maxHeight here
+                overflowY: "auto", // allow vertical scrolling
+              }}
+            >
+              {film.map((film) => (
+                <li
+                  key={film.id}
+                  onClick={() => handleSelectFilm(film.nama_film)}
+                  style={{
+                    cursor: "pointer",
+                    padding: "5px 10px",
+                  }}
+                >
+                  {film.nama_film}
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
       </Form>
     </div>
