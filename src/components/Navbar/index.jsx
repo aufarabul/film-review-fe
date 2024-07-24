@@ -18,19 +18,14 @@ function NavScrollExample() {
             <NavDropdown title="Genre" id="collapsible-nav-dropdown">
               <NavDropdown.Item href="/genre/1">Horror</NavDropdown.Item>
               <NavDropdown.Item href="/genre/6">Drama </NavDropdown.Item>
-
               <NavDropdown.Item href="/genre/2">Comedy </NavDropdown.Item>
               <NavDropdown.Item href="/genre/3">Action </NavDropdown.Item>
               <NavDropdown.Item href="/genre/4">Thriller </NavDropdown.Item>
-              <NavDropdown.Item href="/genre/5">Romance </NavDropdown.Item>
-              <NavDropdown.Item href="/genre/7">
-                Science Fiction{" "}
-              </NavDropdown.Item>
             </NavDropdown>
             <Nav.Link href="/movies">Film</Nav.Link>
             <Nav.Link href="/tv">TV Series</Nav.Link>
 
-            <Nav.Link href="#action2">Tentang Kami</Nav.Link>
+            <Nav.Link href="/tentangkami">Tentang Kami</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

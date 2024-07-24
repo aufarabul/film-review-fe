@@ -24,7 +24,6 @@ const ReviewCard = ({ film }) => {
       •
     </Box>
   );
-  //   console.log(film?.ulasans?.nama_user);
   return (
     <>
       <div className=" d-flex flex-wrap justify-content-start">

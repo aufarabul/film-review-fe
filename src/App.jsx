@@ -18,6 +18,7 @@ import Search from "./pages/SearchPage";
 import Footer from "./components/Footer";
 import Film from "./components/Film";
 import TvSeries from "./components/TvSeries";
+import TentangKami from "./pages/TentangKami";
 
 function App() {
   const router = createBrowserRouter([
@@ -82,6 +83,16 @@ function App() {
         <>
           <Navbar />
           <TvSeries />
+          <Footer />
+        </>
+      ),
+    },
+    {
+      path: "/tentangkami",
+      element: (
+        <>
+          <Navbar />
+          <TentangKami />
           <Footer />
         </>
       ),

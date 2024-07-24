@@ -22,7 +22,7 @@ function footer() {
           </Col>
 
           <Col>
-            <p className="mt-5">Follow Me On</p>
+            {/* <p className="mt-5">Follow Me On</p>
             <InstagramIcon
               fontSize="large"
               className="film-card m-2"
@@ -55,7 +55,7 @@ function footer() {
                   "https://www.tiktok.com/@aufarabul?_t=8o30Qs9e3rU&_r=1"
                 )
               }
-            />
+            /> */}
           </Col>
 
           <Col className="d-flex justify-content-end align-items-center m-3">
