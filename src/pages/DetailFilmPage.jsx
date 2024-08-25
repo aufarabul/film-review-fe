@@ -267,7 +267,14 @@ const detail = () => {
           <CardReview film={film} />
         </Row>
       )}
-
+      <div>
+        <h2
+          className="mx-5 my-2"
+          style={{ fontWeight: "bold", color: "#37B7C3" }}
+        >
+          Masukkan Ulasan
+        </h2>
+      </div>
       <Container className="mt-5 my-5">
         <InputReview id={film?.id} />
       </Container>
